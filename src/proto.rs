@@ -234,11 +234,14 @@ impl Encoder for LspEncoder {
     type Error = Error;
 
     fn encode(&mut self, item: Body, dst: &mut BytesMut) -> Result<(), Error> {
-        let msg = serde_json::to_string(&item).map_err(Error::Serde)?;
+        let body = serde_json::to_string(&item).map_err(Error::Serde)?;
+        let body_len: usize = body.chars().map(char::len_utf8).sum();
+        
+        let header = format!("Content-Length: {}\r\n\r\n", body_len);
+        let header_len: usize = header.chars().map(char::len_utf8).sum();
 
-        let len: usize = msg.chars().map(char::len_utf8).sum();
-
-        Ok(write!(dst, "Content-Length: {}\r\n\r\n{}", len, msg)
+        dst.reserve(header_len + body_len);
+        Ok(write!(dst, "{}{}", header, body)
             .map_err(|_| io::Error::new(io::ErrorKind::Other, "Formatting into buffer failed"))?)
     }
 }

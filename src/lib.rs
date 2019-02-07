@@ -1,4 +1,4 @@
-pub use crate::proto::{LspDecoder, LspEncoder};
+pub use crate::proto::{LspCodec, LspDecoder, LspEncoder};
 
 pub mod proto;
 

@@ -9,10 +9,35 @@ use crate::Error;
 type Body = serde_json::Value;
 
 #[derive(Default)]
+pub struct LspCodec {
+    encoder: LspEncoder,
+    decoder: LspDecoder,
+}
+
+impl Encoder for LspCodec {
+    type Item = <LspEncoder as Encoder>::Item;
+    type Error = <LspEncoder as Encoder>::Error;
+
+    fn encode(&mut self, item: Self::Item, dst: &mut BytesMut) -> Result<(), Self::Error> {
+        Encoder::encode(&mut self.encoder, item, dst)
+    }
+}
+
+impl Decoder for LspCodec {
+    type Item = <LspEncoder as Encoder>::Item;
+    type Error = <LspEncoder as Encoder>::Error;
+
+    fn decode(&mut self, buf: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
+        Decoder::decode(&mut self.decoder, buf)
+    }
+}
+
+#[derive(Default)]
 pub struct LspDecoder {
     state: State,
 }
 
+#[derive(Default)]
 pub struct LspEncoder;
 
 enum State {
@@ -236,7 +261,7 @@ impl Encoder for LspEncoder {
     fn encode(&mut self, item: Body, dst: &mut BytesMut) -> Result<(), Error> {
         let body = serde_json::to_string(&item).map_err(Error::Serde)?;
         let body_len: usize = body.chars().map(char::len_utf8).sum();
-        
+
         let header = format!("Content-Length: {}\r\n\r\n", body_len);
         let header_len: usize = header.chars().map(char::len_utf8).sum();
 

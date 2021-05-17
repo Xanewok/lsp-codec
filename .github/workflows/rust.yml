@@ -1,0 +1,23 @@
+name: Rust
+
+on: [push]
+
+jobs:
+  check:
+    name: Rust project
+    strategy:
+      matrix:
+        include:
+          - toolchain: stable
+          - toolchain: nightly
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install latest nightly
+        uses: actions-rs/toolchain@v1
+        with:
+            toolchain: ${{ matrix.toolchain }}
+            override: true
+      - run: rustc -v
+      - run: cargo build -v
+      - run: cargo test -v

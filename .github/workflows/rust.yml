@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install latest nightly
+      - name: Install relevant toolchain
         uses: actions-rs/toolchain@v1
         with:
             toolchain: ${{ matrix.toolchain }}
             override: true
-      - run: rustc -v
-      - run: cargo build -v
-      - run: cargo test -v
+      - run: rustc --version
+      - run: cargo build --verbose
+      - run: cargo test --verbose

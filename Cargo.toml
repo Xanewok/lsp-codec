@@ -10,7 +10,7 @@ readme = "README.md"
 
 [dependencies]
 tokio-util = { version = "0.3", default-features = false, features = ["codec"] }
-bytes = "0.5"
+bytes = "1.0"
 serde_json = "1.0"
 
 [dev-dependencies]

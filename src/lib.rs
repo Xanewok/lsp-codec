@@ -31,9 +31,9 @@ impl From<crate::proto::HeaderError> for Error {
 mod tests {
     use super::*;
     use serde_json::json;
-    use tokio_util::codec::{FramedRead, FramedWrite};
     use tokio::runtime::Runtime;
     use tokio_stream::StreamExt;
+    use tokio_util::codec::{FramedRead, FramedWrite};
 
     #[test]
     fn decode() {
@@ -46,7 +46,9 @@ mod tests {
 
         let reader = FramedRead::new(buf, LspDecoder::default());
 
-        let received = runtime.block_on(reader.collect::<Result<Vec<_>, _>>()).unwrap();
+        let received = runtime
+            .block_on(reader.collect::<Result<Vec<_>, _>>())
+            .unwrap();
         assert_eq!(
             received,
             vec![

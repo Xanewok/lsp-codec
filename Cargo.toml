@@ -1,9 +1,9 @@
 [package]
 name = "lsp-codec"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Igor Matuszewski <Xanewok@gmail.com>"]
 edition = "2018"
-description = "Simple Tokio 0.1-based Codec implementation for Language Server Protocol."
+description = "Simple Tokio-compatible codec implementation for Language Server Protocol."
 repository = "https://github.com/Xanewok/lsp-codec"
 license = "MIT"
 readme = "README.md"

@@ -33,11 +33,11 @@ mod tests {
     use serde_json::json;
     use tokio_util::codec::{FramedRead, FramedWrite};
     use tokio::runtime::Runtime;
-    use tokio::stream::StreamExt;
+    use tokio_stream::StreamExt;
 
     #[test]
     fn decode() {
-        let mut runtime = Runtime::new().unwrap();
+        let runtime = Runtime::new().unwrap();
 
         let buf: &[u8] = include_bytes!(concat!(
             env!("CARGO_MANIFEST_DIR"),
@@ -66,10 +66,10 @@ mod tests {
             "key": "value"
         });
 
-        let mut a = Runtime::new().unwrap();
+        let rt = Runtime::new().unwrap();
         let fut = SinkExt::send(&mut writer, obj);
 
-        let _ = a.block_on(fut);
+        let _ = rt.block_on(fut);
 
         let buf = writer.into_inner();
         let s = String::from_utf8(buf).unwrap();
